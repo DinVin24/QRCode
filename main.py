@@ -3,6 +3,7 @@
 #https://youtu.be/Dap1cnMRjeA?si=IVQT9y2_Vy_b9mxW
 
 from PIL import Image
+import copy
 import numpy as np
 def timing_patterns(matrice,marime):
     for i in range(8,marime-8):
@@ -217,6 +218,33 @@ def save_bits(matrice,msg):
         msg=msg[1:]
         L = L[1:]
 
+def apply_mask(matrix, mask_id,template):
+    size = len(matrix)
+    # masked_matrix = [[0] * size for _ in range(size)]
+    for row in range(size):
+        for col in range(size):
+            apply = False
+            if mask_id == 0:
+                apply = (row + col) % 2 == 0
+            elif mask_id == 1:
+                apply = row % 2 == 0
+            elif mask_id == 2:
+                apply = col % 3 == 0
+            elif mask_id == 3:
+                apply = (row + col) % 3 == 0
+            elif mask_id == 4:
+                apply = (row // 2 + col // 3) % 2 == 0
+            elif mask_id == 5:
+                apply = (row * col) % 2 + (row * col) % 3 == 0
+            elif mask_id == 6:
+                apply = ((row * col) % 2 + (row * col) % 3) % 2 == 0
+            elif mask_id == 7:
+                apply = ((row + col) % 2 + (row * col) % 3) % 2 == 0
+
+            if apply and template[row][col]==8 :
+                matrix[row][col] ^= 1
+    # return masked_matrix
+
 def return_mat(x,msg):
     if not (1<=x<=40):
         return None
@@ -228,8 +256,11 @@ def return_mat(x,msg):
     draw_dummy_format_bits(matrice,marime)
     timing_patterns(matrice,marime)
     draw_version_information(matrice,versiune,marime)
+    template = copy.deepcopy(matrice)
     save_bits(matrice,msg)
+    apply_mask(matrice,5,template)
     return matrice
+
 
 ver = 4
 message = "01000011011101000001011011100110000100100000011000010111001001100101001000000111001101100001011100000111010001100101001000000110110101100101011100100110010100100000011011010110000101110010011010010010110000100000011100100110111101110011011010010110100100101100001000000110011001110010011101010110110101101111011000010111001101100101001000000111001101101001001000000111101001100101011011010110111101100001011100110110010100100001001000000011101001000100000011101100000100011110110000010001111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001111011000100111000010111111011100111101110100010100101011101101110101010001011000110101101001111100110000001111101111100101011000101100000001110011101110000111010111011"
