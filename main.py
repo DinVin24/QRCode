@@ -245,6 +245,9 @@ def apply_mask(matrix, mask_id,template):
                 matrix[row][col] ^= 1
     # return masked_matrix
 
+def find_best_mask(matrice):
+
+
 def return_mat(x,msg):
     if not (1<=x<=40):
         return None
