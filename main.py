@@ -183,10 +183,41 @@ def draw_version_information(matrice,versiune,marime):
             matrice[i][j] = int(bitString[0])
             bitString = bitString[1:]
 
-# def calculate_path():
-#     L=[]
+def zigzag(matrix):
+#Cread de Alex :3
+    l = len(matrix)
+    rev = 0
+    correction = 0
+    rez = []
+    for k in range(l // 2):
+        if k == l // 2 - 3:
+            correction = -1
+        if rev == 0:
+            for i in range(l - 1, -1, -1):
+                for j in range(l - k * 2 - 1 + correction, l - k * 2 - 3 + correction, -1):
+                    if matrix[i][j] == 8:
+                        rez.append((i,j))
+            rev = 1
+        else:
+            for i in range(0, l):
+                for j in range(l - k * 2 - 1 + correction, l - k * 2 - 3 + correction, -1):
+                    if matrix[i][j] == 8:
+                        rez.append((i,j))
+            rev = 0
+    return rez
 
-def return_mat(x):
+def save_bits(matrice,msg):
+    L = zigzag(matrice)
+    if len(L)>len(msg):
+        x = len(L)-len(msg)
+        msg = msg + ("0"*x)
+    while L:
+        i,j = L[0]
+        matrice[i][j] = int(msg[0])
+        msg=msg[1:]
+        L = L[1:]
+
+def return_mat(x,msg):
     if not (1<=x<=40):
         return None
     versiune = x
@@ -197,10 +228,12 @@ def return_mat(x):
     draw_dummy_format_bits(matrice,marime)
     timing_patterns(matrice,marime)
     draw_version_information(matrice,versiune,marime)
+    save_bits(matrice,msg)
     return matrice
 
-ver = 8
-poza = return_mat(ver)
+ver = 4
+message = "01000011011101000001011011100110000100100000011000010111001001100101001000000111001101100001011100000111010001100101001000000110110101100101011100100110010100100000011011010110000101110010011010010010110000100000011100100110111101110011011010010110100100101100001000000110011001110010011101010110110101101111011000010111001101100101001000000111001101101001001000000111101001100101011011010110111101100001011100110110010100100001001000000011101001000100000011101100000100011110110000010001111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001111011000001000111101100000100011110110000010001111011000100111000010111111011100111101110100010100101011101101110101010001011000110101101001111100110000001111101111100101011000101100000001110011101110000111010111011"
+poza = return_mat(ver,message)
 for linie in poza:
     print(linie)
 
