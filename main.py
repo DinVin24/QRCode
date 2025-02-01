@@ -408,27 +408,3 @@ def return_mat(versiune, msg,ECL):
     matrice = apply_mask(matrice,find_best_mask(matrice, template,ECL) , template,ECL)
     return matrice
 
-# ver = 1
-# ECL = 'L'
-# message = "0100000100010100100001100101011011000110110001101111001011000010000001110111011011110111001001101100011001000010000100100000001100010011001000110011000010000101101010010101111000000111000010100011011011001001"
-# poza = return_mat(ver, message, ECL)
-# for linie in poza:
-#     print(linie)
-
-
-# DE AICI ESTE DOAR AFISAREA MATRICEI IN POZA
-# color_map = {
-#     0: (255, 255, 255),  # White
-#     1: (0, 0, 0),  # Black
-#     8: (128, 128, 128)  # Gray
-# }
-# image = Image.new("RGB", (len(poza), len(poza)))
-# pixels = image.load()
-# for i in range(len(poza)):
-#     for j in range(len(poza)):
-#         pixels[j, i] = color_map[poza[i][j]]
-# scaling_factor = 50
-# new_size = (len(poza) * scaling_factor, len(poza) * scaling_factor)
-# upscaled_image = image.resize(new_size, Image.NEAREST)
-# upscaled_image.save("upscaled_matrix_image.png")
-# upscaled_image.show()
