@@ -157,6 +157,8 @@ def citim_informatia(matrix,version):
     return bitString
 def return_message(img_path):
     matrice=Qr.main(img_path)
+    for linie in matrice:
+        print (linie)
     # g = open("binary_file.out")
     # matrice = [[int(x) for x in linie.split()] for linie in g.readlines()]
     # g.close()
