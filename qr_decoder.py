@@ -90,7 +90,6 @@ matrice = return_message("test.png")
 
 for linie in matrice:
     print(linie)
-0
 
 
 
