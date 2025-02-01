@@ -24,6 +24,7 @@ $$ $$ $$< $$ |  $$ |      $$    $$/ $$       |$$       |$$    $$/ $$    $$ |$$  
 
 
 
+
 Generator de coduri QR.
 Rulati doar QRGenerator.py, puteti alege nivelul de ERROR Correction si scrieti mesajul.
 
