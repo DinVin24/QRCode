@@ -3,15 +3,19 @@ import version_check as vc
 import QRdrawer as qd
 from PIL import Image
 
-ECL = input("ERROR =")
+ECL = input("ERROR = ")
 input_text = (input("Message: "))
 ver,size = vc.version_check(input_text,ECL)
 msg = rs.final_codewords(input_text,ECL)
 
+g = open("binary_file.out","w")
+
 poza = qd.return_mat(ver,msg,ECL)
 
 for linie in poza:
-    print (linie)
+    for c in linie:
+        g.write(str(c)+" ")
+    g.write("\n")
 
 # DE AICI ESTE DOAR AFISAREA MATRICEI IN POZA
 color_map = {
