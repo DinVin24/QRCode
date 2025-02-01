@@ -1,4 +1,4 @@
-from qr_reader import *
+import qr_reader as Qr
 from QRdrawer import *
 
 def create_image(mat):
@@ -156,10 +156,10 @@ def citim_informatia(matrix,version):
         bitString += str(matrix[i][j])
     return bitString
 def return_message(img_path):
-    # read_QR(img_path)
-    g = open("binary_file.out")
-    matrice = [[int(x) for x in linie.split()] for linie in g.readlines()]
-    g.close()
+    matrice=Qr.main(img_path)
+    # g = open("binary_file.out")
+    # matrice = [[int(x) for x in linie.split()] for linie in g.readlines()]
+    # g.close()
     version = calculate_version(matrice)
     ECL, mask_id = read_format_bits(matrice)
     # print(version,ECL)
@@ -218,8 +218,8 @@ QR_BLOCK_INFO = {1: {'L': (26, [(1, 19)]),'M': (26, [(1, 16)]),'Q': (26, [(1, 13
 
 # for linie in matrice:
 #     print(linie)
-
-print(return_message("NONE"))
+path = input('Enter path to file: ')
+print(return_message(path))
 
 
 
