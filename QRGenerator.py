@@ -27,5 +27,5 @@ for i in range(len(poza)):
 scaling_factor = 50
 new_size = (len(poza) * scaling_factor, len(poza) * scaling_factor)
 upscaled_image = image.resize(new_size, Image.NEAREST)
-upscaled_image.save("test_de_la_teo.png")
+upscaled_image.save("test.png")
 upscaled_image.show()
