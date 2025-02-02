@@ -4,10 +4,9 @@ import QRdrawer as qd
 from PIL import Image
 
 ECL = input("ERROR = ")
-input_text = (input("Message: "))
+input_text = input("INPUT = ")
 ver,size = vc.version_check(input_text,ECL)
 msg = rs.final_codewords(input_text,ECL)
-
 g = open("binary_file.out","w")
 
 poza = qd.return_mat(ver,msg,ECL)

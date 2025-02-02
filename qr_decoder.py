@@ -157,8 +157,6 @@ def citim_informatia(matrix,version):
     return bitString
 def return_message(img_path):
     matrice=Qr.main(img_path)
-    for linie in matrice:
-        print (linie)
     # g = open("binary_file.out")
     # matrice = [[int(x) for x in linie.split()] for linie in g.readlines()]
     # g.close()
@@ -216,7 +214,7 @@ QR_BLOCK_INFO = {1: {'L': (26, [(1, 19)]),'M': (26, [(1, 16)]),'Q': (26, [(1, 13
                  39: {'L': (3537, [(20, 117), (4, 118)]),'M': (3537, [(40, 47), (7, 48)]),'Q': (3537, [(43, 24), (22, 25)]),'H': (3537, [(10, 15), (67, 16)])},
                  40: {'L': (3706, [(19, 118), (6, 119)]),'M': (3706, [(18, 47), (31, 48)]),'Q': (3706, [(34, 24), (34, 25)]),'H': (3706, [(20, 15), (61, 16)])}}
 
-path = input('Enter path to file: ')
+path = input("Path to QR code: ")
 print(return_message(path))
 
 

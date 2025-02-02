@@ -391,6 +391,15 @@ def find_best_mask(matrix, template,ECL):
     #rez[0][0] contine masca cea mai buna!!!!
     return rez[0][0]
 
+def add_padding(matrix):
+#primeste ca parametru matricea si ii adauga un padding de vreo 3 randuri si coloane
+    size = len(matrix)
+    aux_mat = [[0] * (size+6) for _ in range(size+6)]
+    for i in range(size):
+        for j in range(size):
+            aux_mat[i+3][j+3] = matrix[i][j]
+    return aux_mat
+
 def return_mat(versiune, msg,ECL):
 #Primeste ca parametru versiunea, sirul de biti si nivelul de corectare a erorilor
 #Returneaza un cod QR
@@ -406,5 +415,6 @@ def return_mat(versiune, msg,ECL):
     template = copy.deepcopy(matrice)
     save_bits(matrice, msg)
     matrice = apply_mask(matrice,find_best_mask(matrice, template,ECL) , template,ECL)
+    matrice = add_padding(matrice)
     return matrice
 

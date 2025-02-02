@@ -79,7 +79,6 @@ def main(image_path):
 
     binarr = np.where(img > 128, 0, 1).astype(np.uint8)
 
-
     binarr = trim_zeros(binarr)
 
     block_size = compute_block_size(binarr)
@@ -100,23 +99,26 @@ def main(image_path):
                     ]
             compressed_arr[i, j] = 1 if np.mean(block) >= 0.5 else 0
 
-    return compressed_arr
     # Show the binary image
-    #with open('binary_file.out', "w") as g:
-        #for row in compressed_arr:
-            #line = ' '.join(map(str, row))
-            #g.write(line + '\n')
 
-    #np.set_printoptions(threshold=1000)
-
-    #binarr = add_white_border(binarr, block_size)
-    #binimg_array = (1 - binarr) * 255
-    #binimg = Image.fromarray(binimg_array.astype(np.uint8))
-
-    #temp_path = os.getcwd() + '/emp_binary.png'
-    #binimg.save(temp_path)
+    # with open('binary_file.out', "w") as g:
+    #     for row in compressed_arr:
+    #         line = ' '.join(map(str, row))
+    #         g.write(line + '\n')
     #
+    # np.set_printoptions(threshold=1000)
+    #
+    # binarr = add_white_border(binarr, block_size)
+    # binimg_array = (1 - binarr) * 255
+    # binimg = Image.fromarray(binimg_array.astype(np.uint8))
+    #
+    # temp_path = os.getcwd() + '/emp_binary.png'
+    # binimg.save(temp_path)
+
+
+    return compressed_arr
 
 # if __name__ == '__main__':
-#     image_path = input("Image path: ")
+#     # image_path = input("Image path: ")
+#     image_path = "test.png"
 #     main(image_path)
