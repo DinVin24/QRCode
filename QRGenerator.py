@@ -27,7 +27,7 @@ pixels = image.load()
 for i in range(len(poza)):
     for j in range(len(poza)):
         pixels[j, i] = color_map[poza[i][j]]
-scaling_factor = 50
+scaling_factor = 10
 new_size = (len(poza) * scaling_factor, len(poza) * scaling_factor)
 upscaled_image = image.resize(new_size, Image.NEAREST)
 upscaled_image.save("test.png")

@@ -124,7 +124,10 @@ def remove_paddings(message, version):
         "0100": "Byte",
         "1000": "Kanji"
     }
-    mode = mode_mapping[message[:4]]
+    if message[:4] in mode_mapping:
+        mode = mode_mapping[message[:4]]
+    else:
+        mode = "Byte"           #Asta-i un fel de last resort, de fapt nu s-a calculat bine ceva
     message = message[4:]
     if mode == "Numeric":
         char_count_bits = 10 if version <= 9 else 12 if version <= 26 else 14
@@ -162,7 +165,6 @@ def return_message(img_path):
     # g.close()
     version = calculate_version(matrice)
     ECL, mask_id = read_format_bits(matrice)
-    # print(version,ECL)
     matrice = unmask(matrice, mask_id, version, ECL)
     message = citim_informatia(matrice,version)
     message = remove_ECC(message,version,ECL)
@@ -216,6 +218,7 @@ QR_BLOCK_INFO = {1: {'L': (26, [(1, 19)]),'M': (26, [(1, 16)]),'Q': (26, [(1, 13
 
 path = input("Path to QR code: ")
 print(return_message(path))
+
 
 
 
