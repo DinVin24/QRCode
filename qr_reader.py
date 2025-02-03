@@ -56,36 +56,40 @@ def trim_zeros(matrix):         #FUNCTIA ASTA TRB REPARATA
     slices = find_objects(labeled == largest_component)[0]
     row_min, row_max = slices[0].start, slices[0].stop
     col_min, col_max = slices[1].start, slices[1].stop
-    #---------------------------- ROW MAX ESTE CALCULAT INCORECT
-    while matrix[row_max+1,col_min] == 1:
-        row_max += 1
-    while matrix[row_min,col_max+1] == 1:
-        col_max += 1
-    while matrix[row_min-1,col_min] == 1:
-        row_min -= 1
-    while matrix[row_min,col_min-1] == 1:
-        col_min -= 1
+
+     # ------------------------------------ aici incerc eu o alta versiune de trim 2/2/2025 11 PM
+    row_indices = np.where(np.any(matrix == 1, axis=1))[0]
+    row_min,row_max = row_indices[0],row_indices[-1]
+    col_min = 0
+    col_max = len(matrix[0])-1
+    while matrix[row_min][col_min] == 0:
+        col_min += 1
+    while matrix[row_min][col_max] == 0:
+        col_max -= 1
+
+
+    # print("RAND MIN/MAX: ",rand_min, rand_max)
+    # print("COL MIN/MAX: ",coloana_min, coloana_max)
     # Slice the matrix to include only the relevant rows and columns
-    trimmed_matrix = matrix[row_min:row_max, col_min:col_max]
-    # with open('binary_file.out', "w") as g:
-    #     for row in  trimmed_matrix:
-    #         line = ' '.join(map(str, row))
-    #         g.write(line + '\n')
+    trimmed_matrix = matrix[row_min:row_max+1, col_min:col_max+1]
+    with open('binary_file.out', "w") as g:
+        for row in  matrix:
+            line = ' '.join(map(str, row))
+            g.write(line + '\n')
+    # create_image(trimmed_matrix)
     return trimmed_matrix
 
 def compute_block_size(matrix):
-    # print(len(matrix))
     first_column = matrix[:, 0]  # Extract the first column
     count = 0
     for value in first_column:
         if value == 0:
             break
         count += 1
-    # print(count)
     count /=7
     count = int(round(count))
-    correct_size = round(len(matrix)/count)
-    correct_size = int(correct_size*count)
+    correct_size = len(matrix)//count
+    correct_size = correct_size*count
 
     if correct_size < len(matrix):
         new_mat = np.zeros((correct_size, correct_size), dtype=int)
@@ -94,7 +98,6 @@ def compute_block_size(matrix):
                 new_mat[i, j] = matrix[i,j]
     else  :
         new_mat = matrix
-
     return count,new_mat
 
 def correct_sizes(size):
@@ -126,16 +129,18 @@ def main(image_path):
     # Initialize the reduced array
     compressed_arr = np.zeros((new_size, new_size), dtype=int)
     aux = binarr.shape[1] - 1
+    offset = block_size//2
+
     for i in range(new_size):
         for j in range(new_size):
             if i*block_size < binarr.shape[1]:
                 if j*block_size < binarr.shape[1]:
-                    compressed_arr[i, j] = binarr[i * block_size, j * block_size]
+                    compressed_arr[i, j] = binarr[offset+ i * block_size, offset +j * block_size]
                 else:
-                    compressed_arr[i, j] = binarr[i * block_size, aux]
+                    compressed_arr[i, j] = binarr[offset + i * block_size, aux]
             else:
                 if j * block_size < binarr.shape[1]:
-                    compressed_arr[i, j] = binarr[aux, j * block_size]
+                    compressed_arr[i, j] = binarr[aux, offset + j * block_size]
                 else:
                     compressed_arr[i, j] = binarr[aux, aux]
     # Process each 8x8 block
