@@ -73,7 +73,8 @@ def main():
     # input_text = sys.argv[1]
 
     modes = analyze_encodings(input_text)
-    print_encodable_modes(modes)
+    print(print_encodable_modes(modes))
+
 
 if __name__ == "__main__":
     main()
