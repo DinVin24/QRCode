@@ -42,9 +42,12 @@ def concatenate(input_text,ecl="L"):
         text_mode = 'kanji'
 
     versiune,size = vc.version_check(input_text,ecl)
+    #print("Versiune:", versiune,size)
+
     size = int(size)
     size = size*8
     count = str(bin(len(input_text)))[2:]
+
 
     if versiune <= 9:
         nice_ver = "1"
@@ -61,6 +64,7 @@ def concatenate(input_text,ecl="L"):
     count = added_zeros + count
 
     data = "".join(ds.string_to_binary(input_text, text_mode))
+    #print(len(data))
 
     terminator = min(4, size-len(data)-len(count)-4)
 
@@ -101,6 +105,8 @@ def concatenate(input_text,ecl="L"):
         hex_list = [hex(int(s[i:i+8], 2)) for i in range(0, len(s), 8)]  # Convert each character to hex
         print("Hex List:", hex_list)
         return hex_list
+    
+    #string_to_hex_list(string)
 
 
     bytes_list = [int(string[i:i+8], 2) for i in range(0, len(string), 8)]
@@ -115,7 +121,7 @@ def concatenate(input_text,ecl="L"):
 def main():
     # Example input
     input_text = "psihopedagogic123:)"
-    concatenate(input_text)
+    concatenate(input_text,"L")
 
 
 if __name__ == "__main__":

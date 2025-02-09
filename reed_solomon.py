@@ -161,7 +161,7 @@ def get_ecc(version, ecl='L'):
     }
     return qr_ec_codewords[version][ecl]
 
-def get_block_structure(version, ecl):
+def get_block_structure(version, ecl="L"):
     """Returns the data codewords per block for given version and ECL."""
     # Example structure; needs to be completed for all versions
     block_info = {
@@ -243,6 +243,7 @@ def get_block_structure(version, ecl):
               'H': (1276, [(15, 20), (16, 61)])}}
     # Retrieve the block tuple for the specified version and error correction level.
     total_codewords, groups = block_info[version][ecl]
+    #print(groups)
     
     # Build a list that contains the number of data codewords for each block.
     # Each element in the list corresponds to one block.
@@ -264,6 +265,9 @@ def split_into_blocks(data, block_structure):
         end = current + size
         blocks.append(data[current:end])
         current = end
+        index = block_structure.index(size)
+        #if index != len(block_structure)-1 and block_structure[index+1] != size:
+            #blocks[index].append('0x00')
     return blocks
 
 def interleave_blocks(blocks):
@@ -279,7 +283,7 @@ def interleave_blocks(blocks):
 # Main: Demonstration using your QR code parameters
 # -------------------------------------------------------------------
 
-def final_codewords(input_text,ecl):
+def final_codewords(input_text,ecl="L"):
     # Initialize GF(256) tables.
     exp_table, log_table = init_tables()
 
@@ -291,12 +295,14 @@ def final_codewords(input_text,ecl):
     version,total_codewords = vc.version_check(input_text,ecl)
 
     block_structure = get_block_structure(version, ecl)
+    #print(block_structure)
     blocks = split_into_blocks(data_codewords, block_structure)
+    #print([[hex(blocks[i][j]) for j in range(0, len(blocks[i]))] for i in range(0, len(blocks))])
 
     # Calculate ECC per block
     total_ecc = get_ecc(version, ecl)
-    ecc_per_block = total_ecc // len(blocks)
-    ecc_blocks = [rs_encode_msg(block, ecc_per_block, exp_table, log_table) for block in blocks]
+    #print(total_ecc)
+    ecc_blocks = [rs_encode_msg(block, total_ecc, exp_table, log_table) for block in blocks]
 
     # Interleave data and ECC
     interleaved_data = interleave_blocks(blocks)
@@ -306,5 +312,13 @@ def final_codewords(input_text,ecl):
 
     # Print out the results in hexadecimal.
     return "".join(f"{cw:08b}" for cw in final)
-#print(final_codewords("fututi pizda matii de rusu mancamiai toate coaiele de handicapat sa moara toata facultatea unibuc si matematica si informatoiva HWDWAHH morgt  HGDywgDYd HWGDYgd dhAGygWAUdh WD dsw <3"))
 
+def main():
+    # Example input
+    input_text = "psihopedagogic123:)"
+
+    print(final_codewords(input_text,"L"))
+
+
+if __name__ == "__main__":
+    main()

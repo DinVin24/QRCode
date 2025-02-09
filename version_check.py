@@ -91,7 +91,7 @@ def main():
     # Example input
     input_text = input()
 
-    print(version_check(input_text))
+    print(version_check(input_text,"H"))
 
 
 if __name__ == "__main__":
