@@ -69,11 +69,11 @@ def version_check(input_text, error_correction="L"):
     # Assume ds.binary_count returns the total bit count.
     bit_count = ds.binary_count(input_text, text_mode)
     # Convert bits to codewords (1 codeword = 8 bits) and add one extra codeword.
-    required_codewords = (bit_count + 7) // 8
+    required_codewords = (bit_count + 7) // 8 + 1
 
     # Select the proper ECC capacity column.
     ecc_key = f"ECC {error_correction.upper()}"
-
+    print(required_codewords, bit_count)
     # Find the first version where the capacity meets or exceeds the requirement.
     chosen_version = None
     capacity = None
@@ -91,7 +91,7 @@ def main():
     # Example input
     input_text = input()
 
-    print(version_check(input_text,"H"))
+    print(version_check(input_text,"L"))
 
 
 if __name__ == "__main__":
