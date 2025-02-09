@@ -95,7 +95,7 @@ def compute_block_size(matrix):
         count_pixels += 1
     whitepixels = 0
     firstModule = lastModule = 0
-    secondRow = matrix[count_pixels//7+1,:]
+    secondRow = matrix[count_pixels//7+3,:]
     for value in secondRow:
         if value == 1:
             if whitepixels == 0:
@@ -109,7 +109,7 @@ def compute_block_size(matrix):
                 break
 
     # print("Pixels per 7 modules:",count_pixels)
-    # print("Pixels per 5 modukes:",whitepixels)
+    # print("Pixels per 5 modules:",whitepixels)
     # print("Pixels per 1 module:",firstModule, lastModule)
 
     count_pixels /= 7
@@ -124,19 +124,19 @@ def correct_sizes(size):
     if (size-21) % 4 == 0:
         return size
     if (size-21)%4 == 1:
-        print("SIZE ERROR")
+        # print("SIZE ERROR")
         return size-1
     if (size-21)%4 == 2:
-        print("SIZE ERROR")
+        # print("SIZE ERROR")
         return size-2
-    print("SIZE ERROR")
+    # print("SIZE ERROR")
     return size + 1
 
 def average_in_matrix(mat,i1,i2,j1,j2):
     suma = 0
     counter = 0
     for i in range(i1,i2):
-        for j in range(j1,j2):
+        for j in range(j1,j2-1):
             suma += mat[i][j]
             counter+=1
     return round(suma/counter)
@@ -167,18 +167,18 @@ def main(image_path):
             if i == 0:
                 istart = 0
                 ifinish = block_size
-            # elif i == block_size-1:
-            #     istart = OGLength - block_size
-            #     ifinish = OGLength
+            elif i == block_size-1:
+                istart = OGLength - block_size
+                ifinish = OGLength
             else:
                 istart = i*block_size
                 ifinish = (i+1)*block_size
             if j == 0:
                 jstart = 0
                 jfinish = block_size
-            # elif j == block_size-1:
-            #     jstart = OGLength - block_size
-            #     jfinish = OGLength
+            elif j == block_size-1:
+                jstart = OGLength - block_size
+                jfinish = OGLength
             else:
                 jstart = j*block_size
                 jfinish = (j+1)*block_size
@@ -202,8 +202,6 @@ def main(image_path):
     #                 compressed_arr[i, j] = binarr[aux, offset + j * block_size]
     #             else:
     #                 compressed_arr[i, j] = binarr[aux, aux]
-
-    # create_image(compressed_arr)
     return compressed_arr
 
     # Show the binary image
