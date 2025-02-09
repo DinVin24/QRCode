@@ -1,7 +1,10 @@
 import sys
 import os
-from PIL import Image
+
+import numpy
+from PIL import Image, ImageOps
 import numpy as np
+import matplotlib.pyplot as plt
 import math
 from scipy.ndimage import label, find_objects
 
@@ -30,6 +33,32 @@ def add_white_border(matrix, block_size):
 
     return new_matrix
 
+def iterative_thresholding(image):
+    gray = ImageOps.grayscale(image)
+    gray_array = np.array(gray)
+    T = 128  # Initial threshold
+    prev_T = -1
+
+    while T != prev_T:
+        prev_T = T
+        lower_pixels = gray_array[gray_array < T]
+        higher_pixels = gray_array[gray_array >= T]
+
+        if len(lower_pixels) > 0:
+            V1 = np.mean(lower_pixels)
+        else:
+            V1 = 0
+
+        if len(higher_pixels) > 0:
+            V2 = np.mean(higher_pixels)
+        else:
+            V2 = 255
+
+        T = (V1 + V2) / 2  # Update threshold
+
+    binarized_array = (gray_array >= T) * 255
+    binarized_image = Image.fromarray(binarized_array.astype(np.uint8))
+    return binarized_image
 
 def trim_zeros(matrix):
     if not isinstance(matrix, np.ndarray):
@@ -78,7 +107,7 @@ def trim_zeros(matrix):
     # Slice the matrix to include only the relevant rows and columns
     trimmed_matrix = matrix[row_min:row_max+1, col_min:col_max+1]
     with open('binary_file.out', "w") as g:
-        for row in  matrix:
+        for row in  trimmed_matrix:
             line = ' '.join(map(str, row))
             g.write(line + '\n')
     return trimmed_matrix
@@ -108,15 +137,15 @@ def compute_block_size(matrix):
             else:
                 break
 
-    # print("Pixels per 7 modules:",count_pixels)
-    # print("Pixels per 5 modules:",whitepixels)
-    # print("Pixels per 1 module:",firstModule, lastModule)
+    print("Pixels per 7 modules:",count_pixels)
+    print("Pixels per 5 modules:",whitepixels)
+    print("Pixels per 1 module:",firstModule, lastModule)
 
     count_pixels /= 7
     whitepixels /= 5
     module = sum([count_pixels,whitepixels,firstModule,lastModule])/4
-    # print("Pixels per module:",module)
-    # print("Original matrix size:",matrix.shape)
+    print("Pixels per module:",module)
+    print("Original matrix size:",matrix.shape)
     new_mat = matrix
     return module,new_mat
 
@@ -133,61 +162,82 @@ def correct_sizes(size):
     return size + 1
 
 def average_in_matrix(mat,i1,i2,j1,j2):
-    suma = 0
-    counter = 0
+    counter1 = 0
+    counter0 = 0
     for i in range(i1,i2):
-        for j in range(j1,j2-1):
-            suma += mat[i][j]
-            counter+=1
-    return round(suma/counter)
+        for j in range(j1,j2):
+            try:
+                if mat[i][j] == 0:
+                    counter0 += 1
+                else:
+                    counter1 += 1
+            except IndexError:
+                continue
+    if counter1>counter0:
+        return 1
+    return 0
+
 
 def main(image_path):
-    image = Image.open(image_path).convert('L')
+    og_image = Image.open(image_path)
+
+    image = iterative_thresholding(og_image)
+    image = image.convert('L')
 
     img = np.array(image)
+
+
 
     binarr = np.where(img > 128, 0, 1).astype(np.uint16)
     binarr = trim_zeros(binarr)         #              aici binarr pierde ultimul rand. de ce?
     block_size,binarr = compute_block_size(binarr)  #AICI SE FACE SI UN TRIM LA MATRICE
+    new_size = binarr.shape[0] // block_size
+    create_image(binarr,show=False) #binarr se salveaza in dadada.png
 
-    new_size = round(binarr.shape[0] / block_size)
+    image = Image.open("dadada.png")
+    upscaled_image = image.resize((new_size,new_size), Image.NEAREST)
+    upscaled_image.save("dadada.png")
+    upscaled_image.show()
     # print("New size:",new_size)
     # Initialize the reduced array
 
 
     block_size = binarr.shape[0] / new_size
-    # print("STEP:",block_size)
+    print("STEP:",block_size)
 
 
     #DACA NU MERGE, INCEARCA SA INCREMENTEZI CU UN FLOAT!!
     compressed_arr = np.full((new_size, new_size), 8,dtype=int)
     OGLength = binarr.shape[0]
-    for i in range(new_size):
-        for j in range(new_size):
-            if i == 0:
-                istart = 0
-                ifinish = block_size
-            elif i == block_size-1:
-                istart = OGLength - block_size
-                ifinish = OGLength
-            else:
-                istart = i*block_size
-                ifinish = (i+1)*block_size
-            if j == 0:
-                jstart = 0
-                jfinish = block_size
-            elif j == block_size-1:
-                jstart = OGLength - block_size
-                jfinish = OGLength
-            else:
-                jstart = j*block_size
-                jfinish = (j+1)*block_size
+    for i in range(0,len(binarr), round(block_size)):
+        for j in range(0,len(binarr[i]), round(block_size)):
+            istart = i
+            ifinish = i + block_size
+            jstart = j
+            jfinish = j + block_size
+            # if i == 0:
+            #     istart = 0
+            #     ifinish = block_size
+            # elif i == new_size-1:
+            #     istart = OGLength - block_size
+            #     ifinish = OGLength - 1
+            # else:
+            #     istart = i*block_size
+            #     ifinish = (i+1)*block_size
+            # if j == 0:
+            #     jstart = 0
+            #     jfinish = block_size
+            # elif j == new_size-1:
+            #     jstart = OGLength - block_size
+            #     jfinish = OGLength - 1
+            # else:
+            #     jstart = j*block_size
+            #     jfinish = (j+1)*block_size
             value = average_in_matrix(binarr,int(istart),int(ifinish),int(jstart),int(jfinish))
             # subsir = binarr[i*new_size, (j-1)*block_size+1 : j*block_size+1 ]
             # print(subsir)
-            compressed_arr[i][j] = value
-
-
+            #compressed_arr[i][j] = value
+            compressed_arr[round(i/block_size)][round(j/block_size)] = value
     # aux = binarr.shape[1] - 1
     # offset = block_size//2
     # for i in range(new_size):
@@ -221,7 +271,7 @@ def main(image_path):
     # binimg.save(temp_path)
 
 
-def create_image(matrix):
+def create_image(matrix,show=True):
 #PENTRU DEBUGGING
     poza = matrix
     color_map = {
@@ -242,11 +292,12 @@ def create_image(matrix):
     for i in range(len(poza)):
         for j in range(len(poza[0])):
             pixels[j, i] = color_map[poza[i][j]]
-    scaling_factor = 20
+    scaling_factor = 1
     new_size = (len(poza[0]) * scaling_factor, len(poza) * scaling_factor)
     upscaled_image = image.resize(new_size, Image.NEAREST)
     upscaled_image.save("dadada.png")
-    upscaled_image.show()
+    if show:
+        upscaled_image.show()
 
 # if __name__ == '__main__':
 #     # image_path = input("Image path: ")
