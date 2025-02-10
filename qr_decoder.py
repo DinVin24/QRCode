@@ -159,12 +159,15 @@ def citim_informatia(matrix,version):
         bitString += str(matrix[i][j])
     return bitString
 def return_message(img_path):
-    matrice=Qr.main(img_path)
-    # g = open("binary_file.out")
-    # matrice = [[int(x) for x in linie.split()] for linie in g.readlines()]
-    # g.close()
+    matrice = Qr.main(img_path)
+    # print("Read matrix length:", len(matrice),len(matrice[0]))
+    # with open('binary_file.out', "w") as g:
+    #     for row in matrice:
+    #         line = ' '.join(map(str, row))
+    #         g.write(line + '\n')
     version = calculate_version(matrice)
     ECL, mask_id = read_format_bits(matrice)
+    print(version, ECL, mask_id)
     matrice = unmask(matrice, mask_id, version, ECL)
     message = citim_informatia(matrice,version)
     message = remove_ECC(message,version,ECL)

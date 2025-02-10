@@ -2,7 +2,7 @@ import unicode_analyze as ua
 import data_segment as ds
 import version_check as vc
 
-def concatenate(input_text,ecl):
+def concatenate(input_text,ecl="L"):
     modes = ua.analyze_encodings(input_text)
     unicode = (ua.print_encodable_modes(modes))
 
@@ -42,9 +42,12 @@ def concatenate(input_text,ecl):
         text_mode = 'kanji'
 
     versiune,size = vc.version_check(input_text,ecl)
+    #print("Versiune:", versiune,size)
+
     size = int(size)
     size = size*8
     count = str(bin(len(input_text)))[2:]
+
 
     if versiune <= 9:
         nice_ver = "1"
@@ -61,6 +64,7 @@ def concatenate(input_text,ecl):
     count = added_zeros + count
 
     data = "".join(ds.string_to_binary(input_text, text_mode))
+    #print(len(data))
 
     terminator = min(4, size-len(data)-len(count)-4)
 
@@ -83,13 +87,12 @@ def concatenate(input_text,ecl):
     bytepadding=""
 
 
-
     if len(string)+len(bytepadding) <= 0:
         bytepadding = ""
     else:
         while len(string)+len(bytepadding) <= size-8:
             bytepadding +=ec
-            if len(string) <= size-8:
+            if len(string)+len(bytepadding) <= size-8:
                 bytepadding += eleven
 
     string += bytepadding
@@ -100,15 +103,26 @@ def concatenate(input_text,ecl):
     
     def string_to_hex_list(s):
         hex_list = [hex(int(s[i:i+8], 2)) for i in range(0, len(s), 8)]  # Convert each character to hex
-        # print("Hex List:", hex_list)
+        print("Hex List:", hex_list)
         return hex_list
-
+    
+    #string_to_hex_list(string)
 
 
     bytes_list = [int(string[i:i+8], 2) for i in range(0, len(string), 8)]
+
     
 
     data_codewords = [code for code in bytes_list]
 
 
     return data_codewords
+
+def main():
+    # Example input
+    input_text = "psihopedagogic123:)"
+    concatenate(input_text,"L")
+
+
+if __name__ == "__main__":
+    main()

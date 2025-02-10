@@ -120,48 +120,48 @@ def get_ecc(version, ecl='L'):
     qr_ec_codewords = {
     1: {'L': 7, 'M': 10, 'Q': 13, 'H': 17},
     2: {'L': 10, 'M': 16, 'Q': 22, 'H': 28},
-    3: {'L': 15, 'M': 26, 'Q': 36, 'H': 44},
-    4: {'L': 20, 'M': 36, 'Q': 52, 'H': 64},
-    5: {'L': 26, 'M': 48, 'Q': 72, 'H': 88},
-    6: {'L': 36, 'M': 64, 'Q': 96, 'H': 112},
-    7: {'L': 40, 'M': 72, 'Q': 108, 'H': 130},
-    8: {'L': 48, 'M': 88, 'Q': 132, 'H': 156},
-    9: {'L': 60, 'M': 110, 'Q': 160, 'H': 192},
-    10: {'L': 72, 'M': 130, 'Q': 192, 'H': 224},
-    11: {'L': 80, 'M': 150, 'Q': 224, 'H': 264},
-    12: {'L': 96, 'M': 176, 'Q': 260, 'H': 308},
-    13: {'L': 104, 'M': 198, 'Q': 288, 'H': 352},
-    14: {'L': 120, 'M': 216, 'Q': 320, 'H': 384},
-    15: {'L': 132, 'M': 240, 'Q': 360, 'H': 432},
-    16: {'L': 144, 'M': 280, 'Q': 408, 'H': 480},
-    17: {'L': 168, 'M': 308, 'Q': 448, 'H': 532},
-    18: {'L': 180, 'M': 338, 'Q': 504, 'H': 588},
-    19: {'L': 196, 'M': 364, 'Q': 546, 'H': 650},
-    20: {'L': 224, 'M': 416, 'Q': 600, 'H': 700},
-    21: {'L': 224, 'M': 442, 'Q': 644, 'H': 750},
-    22: {'L': 252, 'M': 476, 'Q': 690, 'H': 816},
-    23: {'L': 270, 'M': 504, 'Q': 750, 'H': 900},
-    24: {'L': 300, 'M': 560, 'Q': 810, 'H': 960},
-    25: {'L': 312, 'M': 588, 'Q': 870, 'H': 1050},
-    26: {'L': 336, 'M': 644, 'Q': 952, 'H': 1110},
-    27: {'L': 360, 'M': 700, 'Q': 1020, 'H': 1200},
-    28: {'L': 390, 'M': 728, 'Q': 1050, 'H': 1260},
-    29: {'L': 420, 'M': 784, 'Q': 1140, 'H': 1350},
-    30: {'L': 450, 'M': 812, 'Q': 1200, 'H': 1440},
-    31: {'L': 480, 'M': 868, 'Q': 1290, 'H': 1530},
-    32: {'L': 510, 'M': 924, 'Q': 1350, 'H': 1620},
-    33: {'L': 540, 'M': 980, 'Q': 1440, 'H': 1710},
-    34: {'L': 570, 'M': 1036, 'Q': 1530, 'H': 1800},
-    35: {'L': 570, 'M': 1064, 'Q': 1590, 'H': 1890},
-    36: {'L': 600, 'M': 1120, 'Q': 1680, 'H': 1980},
-    37: {'L': 630, 'M': 1204, 'Q': 1770, 'H': 2100},
-    38: {'L': 660, 'M': 1260, 'Q': 1860, 'H': 2220},
-    39: {'L': 720, 'M': 1316, 'Q': 1950, 'H': 2310},
-    40: {'L': 750, 'M': 1372, 'Q': 2040, 'H': 2430}
+    3: {'L': 15, 'M': 26, 'Q': 18, 'H': 22},
+    4: {'L': 20, 'M': 18, 'Q': 26, 'H': 16},
+    5: {'L': 26, 'M': 24, 'Q': 18, 'H': 22},
+    6: {'L': 18, 'M': 16, 'Q': 24, 'H': 28},
+    7: {'L': 20, 'M': 18, 'Q': 18, 'H': 26},
+    8: {'L': 24, 'M': 22, 'Q': 22, 'H': 26},
+    9: {'L': 30, 'M': 22, 'Q': 20, 'H': 24},
+    10: {'L': 18, 'M': 26, 'Q': 24, 'H': 28},
+    11: {'L': 20, 'M': 30, 'Q': 28, 'H': 24},
+    12: {'L': 24, 'M': 22, 'Q': 26, 'H': 28},
+    13: {'L': 26, 'M': 22, 'Q': 24, 'H': 22},
+    14: {'L': 30, 'M': 24, 'Q': 20, 'H': 24},
+    15: {'L': 22, 'M': 24, 'Q': 30, 'H': 24},
+    16: {'L': 24, 'M': 28, 'Q': 24, 'H': 30},
+    17: {'L': 28, 'M': 28, 'Q': 28, 'H': 28},
+    18: {'L': 30, 'M': 26, 'Q': 28, 'H': 28},
+    19: {'L': 28, 'M': 26, 'Q': 26, 'H': 26},
+    20: {'L': 28, 'M': 26, 'Q': 30, 'H': 28},
+    21: {'L': 28, 'M': 26, 'Q': 28, 'H': 30},
+    22: {'L': 28, 'M': 28, 'Q': 30, 'H': 24},
+    23: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    24: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    25: {'L': 26, 'M': 28, 'Q': 30, 'H': 30},
+    26: {'L': 28, 'M': 28, 'Q': 28, 'H': 30},
+    27: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    28: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    29: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    30: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    31: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    32: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    33: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    34: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    35: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    36: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    37: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    38: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    39: {'L': 30, 'M': 28, 'Q': 30, 'H': 30},
+    40: {'L': 30, 'M': 28, 'Q': 30, 'H': 30}
     }
     return qr_ec_codewords[version][ecl]
 
-def get_block_structure(version, ecl):
+def get_block_structure(version, ecl="L"):
     """Returns the data codewords per block for given version and ECL."""
     # Example structure; needs to be completed for all versions
     block_info = {
@@ -243,6 +243,7 @@ def get_block_structure(version, ecl):
               'H': (1276, [(15, 20), (16, 61)])}}
     # Retrieve the block tuple for the specified version and error correction level.
     total_codewords, groups = block_info[version][ecl]
+    #print(groups)
     
     # Build a list that contains the number of data codewords for each block.
     # Each element in the list corresponds to one block.
@@ -264,6 +265,9 @@ def split_into_blocks(data, block_structure):
         end = current + size
         blocks.append(data[current:end])
         current = end
+        index = block_structure.index(size)
+        #if index != len(block_structure)-1 and block_structure[index+1] != size:
+            #blocks[index].append('0x00')
     return blocks
 
 def interleave_blocks(blocks):
@@ -279,7 +283,7 @@ def interleave_blocks(blocks):
 # Main: Demonstration using your QR code parameters
 # -------------------------------------------------------------------
 
-def final_codewords(input_text,ecl):
+def final_codewords(input_text,ecl="L"):
     # Initialize GF(256) tables.
     exp_table, log_table = init_tables()
 
@@ -291,12 +295,14 @@ def final_codewords(input_text,ecl):
     version,total_codewords = vc.version_check(input_text,ecl)
 
     block_structure = get_block_structure(version, ecl)
+    #print(block_structure)
     blocks = split_into_blocks(data_codewords, block_structure)
+    #print([[hex(blocks[i][j]) for j in range(0, len(blocks[i]))] for i in range(0, len(blocks))])
 
     # Calculate ECC per block
     total_ecc = get_ecc(version, ecl)
-    ecc_per_block = total_ecc // len(blocks)
-    ecc_blocks = [rs_encode_msg(block, ecc_per_block, exp_table, log_table) for block in blocks]
+    #print(total_ecc)
+    ecc_blocks = [rs_encode_msg(block, total_ecc, exp_table, log_table) for block in blocks]
 
     # Interleave data and ECC
     interleaved_data = interleave_blocks(blocks)
@@ -306,5 +312,13 @@ def final_codewords(input_text,ecl):
 
     # Print out the results in hexadecimal.
     return "".join(f"{cw:08b}" for cw in final)
-#print(final_codewords("fututi pizda matii de rusu mancamiai toate coaiele de handicapat sa moara toata facultatea unibuc si matematica si informatoiva HWDWAHH morgt  HGDywgDYd HWGDYgd dhAGygWAUdh WD dsw <3"))
 
+def main():
+    # Example input
+    input_text = "psihopedagogic123:)"
+
+    print(final_codewords(input_text,"L"))
+
+
+if __name__ == "__main__":
+    main()

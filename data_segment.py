@@ -62,7 +62,7 @@ def binary_count(input_string, mode='byte'):
     return count
 # Example usage:
 if __name__ == "__main__":
-    input_str = "HELLO WORLD 123"
+    input_str = "psihopedagogic123:)"
     
     # print("Numeric Mode:")
     try:
