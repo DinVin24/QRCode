@@ -1,5 +1,5 @@
-import unicode_analyze as ua
-import data_segment as ds
+import src.tools.unicode_analyze as ua
+import src.tools.data_segment as ds
 
 def version_check(input_text, error_correction="L"):
     capacity_data = [
