@@ -10,7 +10,8 @@ Daca vrei sa rulati codul direct, fara vreun middle-man, mai intai descarcati to
 - DECODER: Rulati [qr_decoder.py](qr_decoder.py) si trebuie doar sa scrieti path-ul spre imaginea cu codul QR. Rezultatul va fi afisat pe ecran.
 
 
-
 Librarii necesare, esentiale chiar!!:
 Pillow, numpy, scipy, copy.
+
+
 Modulele qr_reader, concatenate, data_segment, reed_solomon, unicode_analyze si version_check sunt luate de la Teo
