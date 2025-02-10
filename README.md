@@ -1,6 +1,6 @@
 [README](readme.txt)
 
-[Documentatie](Proiect 0x00 - Coduri QR - Echipa Maestrii Sigma.md)
+[Documentatie](Proiect\ 0x00\ -\ Coduri\ QR\ -\ Echipa\ Maestrii\ Sigma.md)
 
 Mod de utilizare:
 
