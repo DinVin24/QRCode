@@ -134,9 +134,11 @@ Mesajul original este văzut ca un polinom P(x), unde coeficienții sunt numerel
 
 Se generează un polinom generator g(x) de grad n, care este folosit pentru a calcula codurile de corecție a erorilor.
 Se extinde mesajul prin împărțirea polinomului la generator:
+
 $$
 P(x) \cdot x^n \mod g(x)
 $$
+
 Rezultatul este restul împărțirii, care reprezintă cuvintele ECC.
 
 Se amestecă blocurile de date astfel încât să fie distribuite uniform în codul QR.
