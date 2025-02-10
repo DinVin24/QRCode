@@ -1,10 +1,7 @@
 import sys
 import os
-
-import numpy
-from PIL import Image, ImageOps
+from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 import math
 from scipy.ndimage import label, find_objects
 
@@ -33,32 +30,6 @@ def add_white_border(matrix, block_size):
 
     return new_matrix
 
-def iterative_thresholding(image):
-    gray = ImageOps.grayscale(image)
-    gray_array = np.array(gray)
-    T = 128  # Initial threshold
-    prev_T = -1
-
-    while T != prev_T:
-        prev_T = T
-        lower_pixels = gray_array[gray_array < T]
-        higher_pixels = gray_array[gray_array >= T]
-
-        if len(lower_pixels) > 0:
-            V1 = np.mean(lower_pixels)
-        else:
-            V1 = 0
-
-        if len(higher_pixels) > 0:
-            V2 = np.mean(higher_pixels)
-        else:
-            V2 = 255
-
-        T = (V1 + V2) / 2  # Update threshold
-
-    binarized_array = (gray_array >= T) * 255
-    binarized_image = Image.fromarray(binarized_array.astype(np.uint8))
-    return binarized_image
 
 def trim_zeros(matrix):
     if not isinstance(matrix, np.ndarray):
@@ -67,211 +38,154 @@ def trim_zeros(matrix):
         raise ValueError("Input matrix must be 2-dimensional.")
     if matrix.size == 0:
         return matrix
-    # Label connected components of 1s
-    structure = np.ones((3, 3), dtype=int)  # Define connectivity (8-connectivity)
-    labeled, num_features = label(matrix, structure=structure)
 
-    if num_features == 0:
-        # If there are no 1s, return an empty array
-        return np.array([[]], dtype=matrix.dtype)
-    # Find the largest connected component
-    component_sizes = np.bincount(labeled.flatten())
-    # The background (0) is not a component, so set its size to 0
-    component_sizes[0] = 0
-    largest_component = component_sizes.argmax()
-    #---------------------------------------------------------------- de aici ceva naspa rau se intampla si pierdem ultimul rand
+    rows = np.any(matrix == 1, axis=1)      #luam toate randurile/coloanele care contin 1
+    cols = np.any(matrix == 1, axis=0)
 
-    # Get the bounding box of the largest component
-    slices = find_objects(labeled == largest_component)[0]
-    row_min, row_max = slices[0].start, slices[0].stop
-    col_min, col_max = slices[1].start, slices[1].stop
+    row_min, row_max = np.where(rows)[0][[0, -1]]     #salvam primu' si ultimu
+    col_min, col_max = np.where(cols)[0][[0, -1]]
 
-     # ------------------------------------ aici incerc eu o alta versiune de trim 2/2/2025 11 PM
-    row_indices = np.where(np.any(matrix == 1, axis=1))[0]
-    row_min,row_max = row_indices[0],row_indices[-1]
-    col_min = 0
-    col_max = len(matrix[0])-1
-    while matrix[row_min][col_min] == 0:
-        col_min += 1
-    while matrix[row_min][col_max] == 0:
-        col_max -= 1
-
-    # rows = row_max - row_min
-    # cols = col_max - col_min
-    # if rows > cols:
-    #     row_max -= (rows-cols)
-    # elif cols > rows:
-    #     col_max -= (cols-rows)
-    # print("RAND MIN/MAX: ",rand_min, rand_max)    
-    # print("COL MIN/MAX: ",coloana_min, coloana_max)
-    # Slice the matrix to include only the relevant rows and columns
-    trimmed_matrix = matrix[row_min:row_max+1, col_min:col_max+1]
-    with open('binary_file.out', "w") as g:
-        for row in  trimmed_matrix:
-            line = ' '.join(map(str, row))
-            g.write(line + '\n')
+    trimmed_matrix = matrix[row_min:row_max + 1, col_min:col_max + 1] #niste slicing frumos, Dexter ar fi gelos
     return trimmed_matrix
-
 def compute_block_size(matrix):
-        # if matrix.shape[0] >= matrix.shape:
-        #     pass
-        #-------------------------------------------------- ia si continua de aici!!!
-    first_column = matrix[:, 0]  # Extract the first column
-    count_pixels = 0
-    for value in first_column:
-        if value == 0:
-            break
-        count_pixels += 1
-    whitepixels = 0
-    firstModule = lastModule = 0
-    secondRow = matrix[count_pixels//7+3,:]
-    for value in secondRow:
-        if value == 1:
-            if whitepixels == 0:
-                firstModule += 1
-            else:
-                lastModule += 1
+    istart = 0
+    jstart = 0
+    matrix[0][0]=1 #un caz particular in care primu colt era 0
+    while matrix[0][jstart] == 1:
+        jstart += 1
+    while matrix[istart][0]==1:
+        istart+=1
+    pixels_rows = []
+    color=None
+    for j in range(0, matrix.shape[1]):
+        if j >= jstart:
+            aux = istart - (istart//14)
         else:
-            if lastModule == 0:
-                whitepixels += 1
+            aux = istart - 4*(istart//7)
+
+        if matrix[aux][j] == 1: # de fapt istart // 7 // 2. Asta pt ca vreau sa fiu la mijlocul block ului
+            if color != "black":
+              color = "black"
+              pixels_rows.append(1)
             else:
-                break
+                pixels_rows[-1]+=1
+        else:
+            if color != "white":
+                color = "white"
+                pixels_rows.append(1)
+            else:
+                pixels_rows[-1]+=1 #STIU, valorile lor nu-s consistente dar n-am timp sa la calculez si pe ele
+    #facem la fel pt coloana
+    pixels_cols = []
+    color=None
+    for i in range(0, matrix.shape[0]):
+        if i >= istart:
+            aux = jstart - (jstart//14)
+        else:
+            aux = jstart - 4 * (jstart // 7)
 
-    print("Pixels per 7 modules:",count_pixels)
-    print("Pixels per 5 modules:",whitepixels)
-    print("Pixels per 1 module:",firstModule, lastModule)
+        if matrix[i][aux]==1:
+            if color != "black":
+                color = "black"
+                pixels_cols.append(1)
+            else:
+                pixels_cols[-1]+=1
+        else:
+            if color != "white":
+                color = "white"
+                pixels_cols.append(1)
+            else:
+                pixels_cols[-1]+=1
+    #Acum voi incerca sa le calculez mai precis :(((((
+    auxrows = pixels_rows[2]//3
+    pixels_rows.pop(2)
+    [pixels_rows.insert(2,auxrows) for _ in range(3)]
+    auxcols = pixels_cols[2]//3
+    pixels_cols.pop(2)
+    [pixels_cols.insert(2,auxcols) for _ in range(3)]
 
-    count_pixels /= 7
-    whitepixels /= 5
-    module = sum([count_pixels,whitepixels,firstModule,lastModule])/4
-    print("Pixels per module:",module)
-    print("Original matrix size:",matrix.shape)
-    new_mat = matrix
-    return module,new_mat
+    auxrows = pixels_rows[-1]//7
+    auxcols = pixels_cols[-1]//7
+    pixels_rows.pop(-1)
+    pixels_cols.pop(-1)
+    pixels_rows.extend([auxrows]*7)
+    pixels_cols.extend([auxcols]*7)
 
-def correct_sizes(size):
-    if (size-21) % 4 == 0:
-        return size
-    if (size-21)%4 == 1:
-        # print("SIZE ERROR")
-        return size-1
-    if (size-21)%4 == 2:
-        # print("SIZE ERROR")
-        return size-2
-    # print("SIZE ERROR")
-    return size + 1
+    # print(pixels_rows,pixels_cols,sep="\n")
+    # print(len(pixels_rows),len(pixels_cols))
+    return (matrix.shape[0]/len(pixels_rows)),len(pixels_cols)
+    # return pixels_rows, pixels_cols
 
+
+def compress(matrix):
+    rows, cols = compute_block_size(matrix)
+    compressed_cols = []
+    #COMPRESIUNE PE COLOANE!!!
+    for i in range(matrix.shape[0]):
+        for j in range(1):
+            pass
 def average_in_matrix(mat,i1,i2,j1,j2):
-    counter1 = 0
-    counter0 = 0
+    counter1=0
+    counter0=0
     for i in range(i1,i2):
-        for j in range(j1,j2):
-            try:
-                if mat[i][j] == 0:
-                    counter0 += 1
-                else:
-                    counter1 += 1
-            except IndexError:
-                continue
-    if counter1>counter0:
+        for j in range(j1,j2-1):
+            if mat[i][j]==1:
+                counter1+=1
+            else:
+                counter0+=1
+    if counter1 > counter0:
         return 1
-    return 0
-
+    else:
+        return 0
 
 def main(image_path):
-    og_image = Image.open(image_path)
-
-    image = iterative_thresholding(og_image)
-    image = image.convert('L')
-
+    image = Image.open(image_path).convert('L')
     img = np.array(image)
-
-
-
     binarr = np.where(img > 128, 0, 1).astype(np.uint16)
-    binarr = trim_zeros(binarr)         #              aici binarr pierde ultimul rand. de ce?
-    block_size,binarr = compute_block_size(binarr)  #AICI SE FACE SI UN TRIM LA MATRICE
-    new_size = binarr.shape[0] // block_size
-    create_image(binarr,show=False) #binarr se salveaza in dadada.png
+    binarr = trim_zeros(binarr)
 
-    image = Image.open("dadada.png")
-    upscaled_image = image.resize((new_size,new_size), Image.NEAREST)
-    upscaled_image.save("dadada.png")
-    upscaled_image.show()
+    block_size,new_size = compute_block_size(binarr)
+
+
+    # new_size = round(binarr.shape[0] / block_size)
     # print("New size:",new_size)
     # Initialize the reduced array
 
 
-    block_size = binarr.shape[0] / new_size
-    print("STEP:",block_size)
-
+    # block_size = binarr.shape[0] / new_size
+    # print("STEP:",block_size)
 
     #DACA NU MERGE, INCEARCA SA INCREMENTEZI CU UN FLOAT!!
     compressed_arr = np.full((new_size, new_size), 8,dtype=int)
     OGLength = binarr.shape[0]
-    for i in range(0,len(binarr), round(block_size)):
-        for j in range(0,len(binarr[i]), round(block_size)):
-            istart = i
-            ifinish = i + block_size
-            jstart = j
-            jfinish = j + block_size
-            # if i == 0:
-            #     istart = 0
-            #     ifinish = block_size
-            # elif i == new_size-1:
-            #     istart = OGLength - block_size
-            #     ifinish = OGLength - 1
-            # else:
-            #     istart = i*block_size
-            #     ifinish = (i+1)*block_size
-            # if j == 0:
-            #     jstart = 0
-            #     jfinish = block_size
-            # elif j == new_size-1:
-            #     jstart = OGLength - block_size
-            #     jfinish = OGLength - 1
-            # else:
-            #     jstart = j*block_size
-            #     jfinish = (j+1)*block_size
+    create_file(binarr)
+    for i in range(new_size):
+        for j in range(new_size):
+            if i == new_size-1:
+                istart = OGLength - block_size
+                ifinish = OGLength
+            else:
+                istart = i*block_size
+                ifinish = (i+1)*block_size
+            if j == new_size-1:
+                jstart = OGLength - block_size
+                jfinish = OGLength
+            else:
+                jstart = j*block_size
+                jfinish = (j+1)*block_size
             value = average_in_matrix(binarr,int(istart),int(ifinish),int(jstart),int(jfinish))
-            # subsir = binarr[i*new_size, (j-1)*block_size+1 : j*block_size+1 ]
-            # print(subsir)
-            #compressed_arr[i][j] = value
-            compressed_arr[round(i/block_size)][round(j/block_size)] = value
-    # aux = binarr.shape[1] - 1
-    # offset = block_size//2
-    # for i in range(new_size):
-    #     for j in range(new_size):
-    #         if i*block_size < binarr.shape[1]:
-    #             if j*block_size < binarr.shape[1]:
-    #                 compressed_arr[i, j] = binarr[offset + i * block_size, offset +j * block_size]
-    #             else:
-    #                 compressed_arr[i, j] = binarr[offset + i * block_size, aux]
-    #         else:
-    #             if j * block_size < binarr.shape[1]:
-    #                 compressed_arr[i, j] = binarr[aux, offset + j * block_size]
-    #             else:
-    #                 compressed_arr[i, j] = binarr[aux, aux]
+            # print(f"({istart}, {ifinish}), ({jstart}, {jfinish})")
+            compressed_arr[i][j] = value
+
     return compressed_arr
 
-    # Show the binary image
+def create_file(matrice):
+    with open('binary_file.out', "w") as g:
+        for row in matrice:
+            line = ''.join(map(str, row))
+            g.write(line + '\n')
 
-    # with open('binary_file.out', "w") as g:
-    #     for row in compressed_arr:
-    #         line = ' '.join(map(str, row))
-    #         g.write(line + '\n')
-
-    # np.set_printoptions(threshold=1000)
-    #
-    # binarr = add_white_border(binarr, block_size)
-    # binimg_array = (1 - binarr) * 255
-    # binimg = Image.fromarray(binimg_array.astype(np.uint8))
-    #
-    # temp_path = os.getcwd() + '/emp_binary.png'
-    # binimg.save(temp_path)
-
-
-def create_image(matrix,show=True):
+def create_image(matrix):
 #PENTRU DEBUGGING
     poza = matrix
     color_map = {
@@ -292,15 +206,13 @@ def create_image(matrix,show=True):
     for i in range(len(poza)):
         for j in range(len(poza[0])):
             pixels[j, i] = color_map[poza[i][j]]
-    scaling_factor = 1
+    scaling_factor = 2
     new_size = (len(poza[0]) * scaling_factor, len(poza) * scaling_factor)
     upscaled_image = image.resize(new_size, Image.NEAREST)
     upscaled_image.save("dadada.png")
-    if show:
-        upscaled_image.show()
+    upscaled_image.show()
 
 # if __name__ == '__main__':
 #     # image_path = input("Image path: ")
 #     image_path = "test.png"
 #     main(image_path)
-#dada
