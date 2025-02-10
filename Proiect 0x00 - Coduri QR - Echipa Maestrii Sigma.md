@@ -14,7 +14,7 @@
     - [Pattern-uri de baza](#pattern-uri-de-baza)
     - [Scanarea](#scanarea)
     - [Aplicarea celei mai bune masti pentru corectitudine](#aplicarea-celei-mai-bune-masti-pentru-corectitudine)
-- [Interpretarea / citirea codului QR](#interpretarea--citirea-codului-qr)
+- [Decodarea si citirea codului QR](#decodarea-si-citirea-codului-qr)
   - [Modul de abordare](#modul-de-abordare)
   - [Extragerea informatiilor](#extragerea-informatiilor)
   - [Extragerea continutului text](#extragerea-continutului-text)
