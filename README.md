@@ -1,5 +1,7 @@
 [README](readme.txt)
 
+[Documentatie](Proiect 0x00 - Coduri QR - Echipa Maestrii Sigma.md)
+
 Mod de utilizare:
 
 - Pentru interfata Roblox, doar accesati link-ul [acesta](https://www.roblox.com/games/75361227921023/QR-ASC), restul va fi destul de straight-forward
