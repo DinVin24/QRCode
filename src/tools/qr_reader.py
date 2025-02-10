@@ -14,19 +14,13 @@ def add_white_border(matrix, block_size):
     if not isinstance(block_size, int) or block_size <= 0:
         raise ValueError("block_size must be a positive integer.")
 
-    # Calculate the border size
     border_size = block_size * 4
-
-    # Use numpy's pad function to add borders
-    # Pad with 0s (white pixels)
     new_matrix = np.pad(
         matrix,
         pad_width=((border_size, border_size), (border_size, border_size)),
         mode='constant',
         constant_values=0
     )
-
-    print(f"Added a white border of {border_size} pixels on all sides.")
 
     return new_matrix
 
@@ -96,7 +90,6 @@ def compute_block_size(matrix):
                 pixels_cols.append(1)
             else:
                 pixels_cols[-1]+=1
-    #Acum voi incerca sa le calculez mai precis :(((((
     auxrows = pixels_rows[2]//3
     pixels_rows.pop(2)
     [pixels_rows.insert(2,auxrows) for _ in range(3)]
@@ -121,9 +114,8 @@ def compress(matrix):
     rows, cols = compute_block_size(matrix)
     compressed_cols = []
     #COMPRESIUNE PE COLOANE!!!
-    for i in range(matrix.shape[0]):
-        for j in range(1):
-            pass
+        #nam mai terminat codu asta pt ca merge si fara :D
+
 def average_in_matrix(mat,i1,i2,j1,j2):
     counter1=0
     counter0=0
@@ -146,16 +138,12 @@ def main(image_path):
 
     block_size,new_size = compute_block_size(binarr)
 
-
     # new_size = round(binarr.shape[0] / block_size)
     # print("New size:",new_size)
-    # Initialize the reduced array
-
 
     # block_size = binarr.shape[0] / new_size
     # print("STEP:",block_size)
 
-    #DACA NU MERGE, INCEARCA SA INCREMENTEZI CU UN FLOAT!!
     compressed_arr = np.full((new_size, new_size), 8,dtype=int)
     OGLength = binarr.shape[0]
     create_file(binarr)
@@ -213,6 +201,6 @@ def create_image(matrix):
     upscaled_image.show()
 
 # if __name__ == '__main__':
-#     # image_path = input("Image path: ")
-#     image_path = "test.png"
+#     image_path = input("Image path: ")
+#     # image_path = "test.png"
 #     main(image_path)
