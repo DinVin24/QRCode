@@ -1,5 +1,5 @@
-import qr_reader as Qr
-from QRdrawer import *
+import src.tools.qr_reader as Qr
+from src.tools.QRdrawer import *
 
 def create_image(mat):
     poza = mat
@@ -219,8 +219,10 @@ QR_BLOCK_INFO = {1: {'L': (26, [(1, 19)]),'M': (26, [(1, 16)]),'Q': (26, [(1, 13
                  39: {'L': (3537, [(20, 117), (4, 118)]),'M': (3537, [(40, 47), (7, 48)]),'Q': (3537, [(43, 24), (22, 25)]),'H': (3537, [(10, 15), (67, 16)])},
                  40: {'L': (3706, [(19, 118), (6, 119)]),'M': (3706, [(18, 47), (31, 48)]),'Q': (3706, [(34, 24), (34, 25)]),'H': (3706, [(20, 15), (61, 16)])}}
 
-path = input("Path to QR code: ")
-print(return_message(path))
+
+if __name__ == "__main__":
+	path = input("Path to QR code: ")
+	print(return_message(path))
 
 
 

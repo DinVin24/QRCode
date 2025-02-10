@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            font-size: 1.2rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 95%;
+            max-width: 600px;
+        }
+
+        #generare, #citire {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: min(90%, 500px);
+            background-color: hotpink;
+            padding: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        #generare h1, #citire h1 {
+            font-size: 4vw;
+            background: white;
+            padding: 10px;
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            font-size: 1rem;
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form * {
+            background: white;
+            padding: 5px;
+        }
+
+        input, select, button {
+            font-size: 1rem;
+            padding: 10px;
+            margin: 5px;
+            width: 100%;
+            max-width: 90%;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        button {
+            background-color: pink;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #ff99cc;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            #generare, #citire {
+                width: 95%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 5vw;
+            }
+
+            input, select, button {
+                font-size: 1rem;
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+
+        #readResult {
+            display: none;
+        }
+
+        #svgContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50%;
+            height: auto;
+            margin-top: 20px;
+        }
+
+        .responsive-svg {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+
+    </style>
+    <script>
+	    window.onload = () => {
+      function generateSVGFromMatrix(matrix, padding = 2) {
+        const rows = matrix.length;
+        const cols = matrix[0].length;
+
+        let svgContent = `<svg xmlns="http://www.w3.org/2000/svg" 
+            viewBox="-${padding} -${padding} ${cols + 2 * padding} ${rows + 2 * padding}" 
+            preserveAspectRatio="xMidYMid meet" 
+            class="responsive-svg">\n`;
+
+        svgContent += `<rect x="-${padding}" y="-${padding}" width="${cols + 2 * padding}" height="${rows + 2 * padding}" fill="white"/>\n`;
+
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                let color = matrix[y][x] === 1 ? "black" : "white";
+                svgContent += `<rect x="${x}" y="${y}" width="1" height="1" fill="${color}"/>\n`;
+            }
+        }
+
+        svgContent += `</svg>`;
+
+        return svgContent;
+    }
+    
+    const genForm = document.getElementById('genForm');
+    const genTextInput = document.getElementById('genMessage');
+    const genSelectBox = document.getElementById('genErr');
+
+    genForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const data = { text: genTextInput.value, errorchar: genSelectBox.value };
+
+        fetch(genForm.action, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(matrix => {
+            const svgData = generateSVGFromMatrix(matrix, 20);
+            let svgContainer = document.getElementById('svgContainer');
+            if (!svgContainer) {
+                svgContainer = document.createElement('div');
+                svgContainer.id = 'svgContainer';
+                genForm.appendChild(svgContainer); 
+            }
+            svgContainer.innerHTML = svgData;
+        })
+        .catch(error => console.error("Error:", error));
+    });
+
+    const readForm = document.getElementById('readForm');
+    const readFileInput = document.getElementById('readFile');
+    const readResult = document.getElementById('readResult');
+
+    readForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        if (readFileInput.files.length === 0) {
+            alert("Please select a file!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', readFileInput.files[0]);
+
+        fetch(readForm.action, {
+            method: 'POST',
+            body: formData 
+        })
+        .then(response => response.text())
+        .then(text => {
+            readResult.innerText = text;
+	    readResult.style.display = "block"
+        })
+        .catch(error => console.error("Error:", error));
+    });
+};
+
+    </script>
+</head>
+<body>
+	<div class="container">
+	<div id="generare">
+		<h1>Generator de coduri QR</h1>
+		<form id="genForm" method="post" action="http://maestrusigma.lol/process">
+			<label>Codifica un mesaj:
+				<input id="genMessage" type="text">
+			</label>
+			<label>Selecteaza nivelul de corectare al erorilor (error correction):</label>
+				<select id="genErr">
+					<option value="L">Mica</option>
+					<option value="M">Medie</option>
+					<option value="Q">Quartila</option>
+					<option value="H">Mare</option>
+				</select>
+			<button id="genSubmitButton" type="submit">Trimite</button>
+		</form>
+	</div>
+	<div id="citire">
+		<h1>Cititor/intrepretor de coduri QR</h1>
+		<form id ="readForm" method="post" action="http://maestrusigma.lol/photo">
+			<label>Ataseaza o poza cu un cod QR:</label>
+			<input id="readFile" type="file">
+			<button type="readSubmit">Trimite</button>
+			<p id="readResult"></p>
+		</form>
+	</div>
+	</div>
+</body>
+</html>
