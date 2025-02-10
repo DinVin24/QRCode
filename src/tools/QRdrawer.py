@@ -343,7 +343,6 @@ def count_2x2_patterns(matrix):
     return count
 
 def find_horizontal_finder_patterns(matrix):
-#TE ROG REPARA FUNCTIA ASTA, PT CA NU SE CALCULEAZA CORECT :(((((((((((((
     count = 0
     for linie in matrix:
         #asta-i pt cele din mijloc
