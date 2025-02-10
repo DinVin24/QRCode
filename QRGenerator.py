@@ -1,6 +1,6 @@
-import src.tools.reed_solomon as rs
-import src.tools.version_check as vc
-import src.tools.QRdrawer as qd
+import reed_solomon as rs
+import version_check as vc
+import QRdrawer as qd
 from PIL import Image
 
 ECL = input("ERROR = ")
