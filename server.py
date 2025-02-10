@@ -4,13 +4,13 @@ import requests
 import numpy as np
 from werkzeug.utils import secure_filename
 from urllib.parse import urlparse
-from qrgen import final_qr_gen
+from src.server.qrgen import final_qr_gen
 from qr_decoder import return_message
 from flask_cors import CORS
 
 
-serve_folder = "host_files"
-UPLOAD_FOLDER = "uploads"
+serve_folder = "src/server/host_files"
+UPLOAD_FOLDER = "src/server/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
 app = Flask(__name__, static_folder=serve_folder)

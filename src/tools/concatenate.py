@@ -1,6 +1,6 @@
-import unicode_analyze as ua
-import data_segment as ds
-import version_check as vc
+import src.tools.unicode_analyze as ua
+import src.tools.data_segment as ds
+import src.tools.version_check as vc
 
 def concatenate(input_text,ecl="L"):
     modes = ua.analyze_encodings(input_text)
