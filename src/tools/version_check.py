@@ -1,9 +1,7 @@
-import src.tools.unicode_analyze as ua
-import src.tools.data_segment as ds
+import unicode_analyze as ua
+import data_segment as ds
 
 def version_check(input_text, error_correction="L"):
-    # Hard-coded capacity data from your provided table.
-    # Each dictionary represents one QR Code version's capacities.
     capacity_data = [
         {"Version": 1, "ECC L": 19, "ECC M": 16, "ECC Q": 13, "ECC H": 9},
         {"Version": 2, "ECC L": 34, "ECC M": 28, "ECC Q": 22, "ECC H": 16},
@@ -47,13 +45,13 @@ def version_check(input_text, error_correction="L"):
         {"Version": 40, "ECC L": 2956, "ECC M": 2334, "ECC Q": 1666, "ECC H": 1276}
     ]
 
-    # Analyze the text encoding options.
+
     modes = ua.analyze_encodings(input_text)
     best_encoding = ua.best_mode(modes)
     chosen_modes = ua.print_encodable_modes(modes)
     text_mode = ''
 
-    # Map the chosen mode to a text mode.
+
     if chosen_modes == '0001':
         text_mode = 'numeric'
     elif chosen_modes == '0010':    
@@ -63,18 +61,14 @@ def version_check(input_text, error_correction="L"):
     elif chosen_modes == "1000":
         text_mode = 'kanji'
     else:
-        text_mode = 'byte'  # Fallback option
+        text_mode = 'byte'
 
-    # Determine the number of bits required.
-    # Assume ds.binary_count returns the total bit count.
+
     bit_count = ds.binary_count(input_text, text_mode)
-    # Convert bits to codewords (1 codeword = 8 bits) and add one extra codeword.
     required_codewords = (bit_count + 7) // 8 + 1
 
-    # Select the proper ECC capacity column.
     ecc_key = f"ECC {error_correction.upper()}"
-    print(required_codewords, bit_count)
-    # Find the first version where the capacity meets or exceeds the requirement.
+    # print(required_codewords, bit_count)
     chosen_version = None
     capacity = None
     for row in capacity_data:
@@ -83,7 +77,6 @@ def version_check(input_text, error_correction="L"):
             capacity = row[ecc_key]
             break
 
-    # print( chosen_version, capacity)
 
     return chosen_version, capacity
 
