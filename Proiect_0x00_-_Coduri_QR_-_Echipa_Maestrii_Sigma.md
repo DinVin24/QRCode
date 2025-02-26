@@ -151,9 +151,9 @@ Returnează șirul binar final, care este format din:
 
 Se returnează șirul binar final, care este format din:
 
--Datele inițiale transformate
--Cuvintele de corecție a erorilor (ECC)
--Toate aranjate în blocuri intercalate
+- Datele inițiale transformate
+- Cuvintele de corecție a erorilor (ECC)
+- Toate aranjate în blocuri intercalate
 
 Această secvență binară este exact ceea ce este necesar pentru a construi matricea.
 
