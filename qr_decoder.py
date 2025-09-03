@@ -160,22 +160,26 @@ def citim_informatia(matrix,version):
     return bitString
     
 def return_message(img_path):
-    matrice = Qr.main(img_path)
-    # print("Read matrix length:", len(matrice),len(matrice[0]))
-    # with open('binary_file.out', "w") as g:
-    #     for row in matrice:
-    #         line = ' '.join(map(str, row))
-    #         g.write(line + '\n')
-    version = calculate_version(matrice)
-    ECL, mask_id = read_format_bits(matrice)
-    # print(version, ECL, mask_id)
-    matrice = unmask(matrice, mask_id, version, ECL)
-    message = citim_informatia(matrice,version)
-    message = remove_ECC(message,version,ECL)
-    message = read_codeword_matrix(create_codeword_matrix(message,version,ECL))
-    message = remove_paddings(message,version)
-    return message
-
+    message = None
+    try:
+        matrice = Qr.main(img_path)
+        # print("Read matrix length:", len(matrice),len(matrice[0]))
+        # with open('binary_file.out', "w") as g:
+        #     for row in matrice:
+        #         line = ' '.join(map(str, row))
+        #         g.write(line + '\n')
+        version = calculate_version(matrice)
+        ECL, mask_id = read_format_bits(matrice)
+        # print(version, ECL, mask_id)
+        matrice = unmask(matrice, mask_id, version, ECL)
+        message = citim_informatia(matrice,version)
+        message = remove_ECC(message,version,ECL)
+        message = read_codeword_matrix(create_codeword_matrix(message,version,ECL))
+        message = remove_paddings(message,version)
+    except:
+        message = "Eroare: Nu a putut fi citit codul QR din imagine"
+    finally:
+        return message
 
 QR_BLOCK_INFO = {1: {'L': (26, [(1, 19)]),'M': (26, [(1, 16)]),'Q': (26, [(1, 13)]),'H': (26, [(1, 9)])},
                  2: {'L': (44, [(1, 34)]), 'M': (44, [(1, 28)]), 'Q': (44, [(1, 22)]), 'H': (44, [(1, 16)])},

@@ -3,19 +3,23 @@ import os
 import requests
 import numpy as np
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 from urllib.parse import urlparse
 from src.server.qrgen import final_qr_gen
 from qr_decoder import return_message
 from flask_cors import CORS
 
 
-serve_folder = "src/server/host_files"
+SERVE_FOLDER = "src/server/host_files"
 UPLOAD_FOLDER = "src/server/uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 
-app = Flask(__name__, static_folder=serve_folder)
+app = Flask(__name__, static_folder=SERVE_FOLDER)
 CORS(app)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.wsgi_app = ProxyFix(
+    app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1
+)
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -53,11 +57,11 @@ def download_image(url):
 
 @app.route("/")
 def serve_index():
-    return send_from_directory(serve_folder, "index.html")
+    return send_from_directory(SERVE_FOLDER, "index.html")
 
 @app.route("/<path:filename>")
 def serve_static(filename):
-    return send_from_directory(serve_folder, filename)
+    return send_from_directory(SERVE_FOLDER, filename)
 
 @app.route("/process", methods=["POST"])
 def process_request():
@@ -79,23 +83,25 @@ def process_request():
 def process_photo():
     file_path = None
 
+    # If a file was sent, save it temporarily
     if "file" in request.files:
         file = request.files["file"]
         
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         file.save(file_path)
-
+    # But if a link was sent, save the image from the source link temporarily
     elif request.is_json:
         data = request.get_json()
         image_url = data.get("url")
-
         file_path = download_image(image_url)
 
+    # Read the message from the code in the image, then delete it as to save up space
     qr_text = return_message(file_path)
+    os.remove(file_path)
 
     return qr_text, 200, {"Content-Type": "text/plain"}
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80)
+    app.run(host="127.0.0.1", port=8080)
 

@@ -68,6 +68,7 @@ Module/librarii Python folosite:
 - [NumPy](https://numpy.org/)
 - [SciPy](https://scipy.org/)
 - [Flask](https://flask.palletsprojects.com/en/stable/)
+- [Gunicorn](https://gunicorn.org/)
 - [Werkzeug](https://pypi.org/project/Werkzeug/)
 - [urllib](https://docs.python.org/3/library/urllib.html)
 - [Flask-Cors](https://pypi.org/project/Flask-Cors/)
@@ -87,6 +88,7 @@ Pentru website, au fost folosite [HTML](https://html.spec.whatwg.org/multipage/)
 Fara anumite ghiduri puse foarte bine la punct, nu am fi avut nici o sansa sa ducem pana la capat acest proiect. Asa ca, multumim foarte mult celor ce urmeaza ca ne-au ghidat spre calea cea buna:
 
 [Ghidul lui Nayuki](https://www.nayuki.io/page/creating-a-qr-code-step-by-step)
+
 [Ghidul lui Thonky](https://www.thonky.com/qr-code-tutorial/)
 
 De asemenea, multumim fiecarui membru al echipei ca a respectat atributiile sale si a adus contributii grozave in zona sa de lucru a proiectului!
@@ -114,8 +116,8 @@ Se verifică într-un dicționar unde încape dimensiunea totală a șirului de 
 ##### Combinarea segmentelor, adăugarea de padding și codificarea finală
 
 Se adaugă metadate, cum ar fi:
-	-Modul de codificare 
-	-Numărul de caractere 
+	- Modul de codificare 
+	- Numărul de caractere 
 În continuare, se adaugă biți până când este atinsă capacitatea maximă calculată conform versiunii și ECL (Error Correction Level).
 Se adaugă terminatorul (4 biți sau mai puțin).
 Se adaugă bit padding pentru a avea octeți compleți.
@@ -136,7 +138,7 @@ Se generează un polinom generator g(x) de grad n, care este folosit pentru a ca
 Se extinde mesajul prin împărțirea polinomului la generator:
 
 $$
-P(x) \cdot x^n \mod g(x)
+P(x)\cdotx^n\modg(x)
 $$
 
 Rezultatul este restul împărțirii, care reprezintă cuvintele ECC.

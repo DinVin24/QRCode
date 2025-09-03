@@ -46,7 +46,7 @@
         }
 
         #generare h1, #citire h1 {
-            font-size: 2rem;
+            font-size: 4vw;
             background: white;
             padding: 10px;
             width: 90%;
@@ -114,7 +114,7 @@
             }
 
             h1 {
-                font-size: 20em;
+                font-size: 5vw;
             }
 
             input, select, button {
@@ -232,7 +232,7 @@
 	<div class="container">
 	<div id="generare">
 		<h1>Generator de coduri QR</h1>
-		<form id="genForm" method="post" action="/process">
+		<form id="genForm" method="post" action="http://152.53.33.18:1337/process">
 			<label>Codifica un mesaj:
 				<input id="genMessage" type="text">
 			</label>
@@ -248,7 +248,7 @@
 	</div>
 	<div id="citire">
 		<h1>Cititor/intrepretor de coduri QR</h1>
-		<form id ="readForm" method="post" action="/photo">
+		<form id ="readForm" method="post" action="http://152.53.33.18:1337/photo">
 			<label>Ataseaza o poza cu un cod QR:</label>
 			<input id="readFile" type="file">
 			<button type="readSubmit">Trimite</button>
