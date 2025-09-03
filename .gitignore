@@ -1,0 +1,3 @@
+src/server/uploads
+__pycache__
+*.out
