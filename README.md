@@ -40,7 +40,7 @@ $$ $$ $$< $$ |  $$ |      $$    $$/ $$       |$$       |$$    $$/ $$    $$ |$$  
 Mod de utilizare:
 
 - Pentru interfata Roblox, doar accesati link-ul [acesta](https://www.roblox.com/games/75361227921023/QR-ASC), restul va fi destul de straight-forward
-- Pentru interfata web, doar accesati link-ul [acesta](http://maestrusigma.lol/), in rest la fel.
+- Pentru interfata web, doar accesati link-ul [acesta](https://maestriisigma.ro/), in rest la fel.
 
 Daca vrei sa rulati codul direct, fara vreun middle-man, mai intai descarcati toate fisierele.
 - ENCODER: Rulati [QRGenerator.py](QRGenerator.py) si va trebui sa dati un nivel de corectare al erorilor si un mesaj. Programul va crea o imagine cu numele test.png in folder-ul proiectului si o va deschide.
